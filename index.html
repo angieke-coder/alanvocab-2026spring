@@ -136,6 +136,36 @@
         /* Cloud Sync Status Icon */
         #syncStatus { position: absolute; top: 10px; right: 10px; font-size: 12px; font-weight: bold; color: #94a3b8; }
     </style>
+
+    <script>
+    // Local storage fallback
+    const STORAGE_KEY = 'growth-garden-progress';
+    
+    window.gameCore = {
+        db: null,
+        user: { uid: 'local-user' },
+        appId: 'local-garden'
+    };
+    
+    window.saveProgressToCloud = function() {
+        if (!window.state) return;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+            height: window.state.height,
+            level: window.state.level,
+            lastSaved: Date.now()
+        }));
+    };
+    
+    window.loadProgressFromCloud = function() {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+            const data = JSON.parse(saved);
+            window.state.height = data.height || 0;
+            window.state.level = data.level || 0;
+            if (window.updateUI) updateUI(true);
+        }
+    };
+</script>
 </head>
 <body>
 
